@@ -1,0 +1,55 @@
+\documentclass{beamer}
+\usetheme{focus}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{array,booktabs,tabularx}
+\usepackage{epstopdf}
+\usepackage{colortbl, xcolor}
+\usepackage{url}
+
+\title{AmyloGram 2.0: MBO in the prediction of amyloid proteins}
+\date{}
+\author{Dominik Rafacz}
+\institute{Politechnika Warszawska, Faculty of Mathematics and Computer Science}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\SweaveOpts{results=hide}
+
+\maketitle
+
+\begin{frame}{Amyloidogenic proteins}
+
+\end{frame} 
+
+
+\begin{frame}{Amylogram - n-grams analysis}
+
+\end{frame} 
+
+
+\begin{frame}{Amylogram - alphabet reduction}
+
+\end{frame} 
+
+
+\begin{frame}{MBO}
+
+\end{frame} 
+
+\begin{frame}{Results}
+
+\end{frame} 
+
+\begin{frame}{Acknowledgements}
+
+\end{frame} 
+
+\begin{frame}{References}
+
+\end{frame} 
+\end{document}

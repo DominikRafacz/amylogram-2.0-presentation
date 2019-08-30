@@ -8,3 +8,11 @@ amylogram-2.0-presentation.Rproj
 presentation.log
 presentation.synctex.gz
 presentation.tex
+
+*.log
+
+poster\.synctex\.gz
+
+*.tex
+
+*.nav

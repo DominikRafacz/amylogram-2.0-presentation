@@ -20,8 +20,6 @@
 \institute{Warsaw University of Technology}
 
 \begin{document}
-\SweaveOpts{concordance=TRUE}
-\SweaveOpts{results=hide}
 
 \maketitle
 \begin{frame}{Amyloidogenic proteins}
@@ -59,6 +57,62 @@
 
 
 \begin{frame}{MBO}
+
+<<r,warning=FALSE,message=FALSE,echo=FALSE,include=TRUE,results="hide",fig.height=4.5>>=
+library(ggplot2)
+library(mlrMBO)
+library(mlr)
+library(randomsearch)
+library(paramtest)
+library(gridExtra)
+
+present_theme <- theme_bw(base_size = 12) +
+  theme(legend.position = "bottom", 
+        plot.background = element_rect(fill = NA, color = NA), 
+        legend.background= element_rect(fill = NA))
+
+set.seed(1590)
+fn2 = makeSingleObjectiveFunction(
+  name = "Sample Function",
+  fn = function(x) sin(x)*x^2,
+  par.set = makeNumericParamSet("x", len = 1L, lower = -3.8L, upper = 2L),
+  global.opt.params = list(x = 0)
+)
+ctrl = makeMBOControl(propose.points = 1)
+ctrl = setMBOControlTermination(ctrl, iters = 6L)
+ctrl = setMBOControlInfill(ctrl, crit = makeMBOInfillCritEI(),
+                           opt = "focussearch", opt.focussearch.points = 500L)
+run <- exampleRun(fn2, control = ctrl)
+
+df <- as.data.frame(run$mbo.res$opt.path) 
+g1 <- ggplot(data=run$evals, aes(x=x,y=y)) + geom_line() + geom_point(data=data.frame(x=df$x,y=df$y)) + 
+  geom_point(data=data.frame(x=run$mbo.res$x,y=run$mbo.res$y), color="red") +
+  geom_text(data=data.frame(x=run$mbo.res$x,y=run$mbo.res$y), label = round(run$mbo.res$y, 2), color="red", vjust = -1) +
+  ggtitle("MBO") +
+  present_theme
+
+runRandomSearch <- randomsearch(fn2, max.evals = 10L)
+df2 <- as.data.frame(runRandomSearch)
+opt2 <- getOptPathEl(runRandomSearch, index = getOptPathBestIndex(runRandomSearch))
+g2 <- ggplot(data=run$evals, aes(x=x,y=y)) + geom_line() + geom_point(data=data.frame(x=df2$x,y=df2$y)) + 
+  geom_point(data=data.frame(x=opt2$x,y=opt2$y), color="red") +
+  geom_text(data=data.frame(x=opt2$x,y=opt2$y), label = round(opt2$y, 2), color="red", vjust = -1) +
+  ggtitle("Random search") +
+  present_theme
+
+
+fn2.b <- function(iter, x) return(sin(x)*x^2);
+runGridSearch <- grid_search(fn2.b, params = list(x=seq(-3.8,2)))
+df3 <- data.frame(x=runGridSearch$tests$x, y=unlist(runGridSearch$results))
+opt3 <- data.frame(x=runGridSearch$tests$x[which.min(unlist(runGridSearch$results))],y=min(unlist(runGridSearch$results)))
+g3 <- ggplot(data=run$evals, aes(x=x,y=y)) + geom_line() + geom_point(data=data.frame(x=df3$x,y=df3$y)) + 
+  geom_point(data=data.frame(x=opt3$x,y=opt3$y), color="red") +
+  geom_text(data=data.frame(x=opt3$x,y=opt3$y), label = round(opt3$y, 2), color="red", vjust = -1) +
+  ggtitle("Grid search") +
+  present_theme
+
+grid.arrange(g3, g2, g1, ncol = 1)
+@
 
 \end{frame} 
 

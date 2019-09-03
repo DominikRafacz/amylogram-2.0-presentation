@@ -57,14 +57,13 @@ Małgorzata Kotulska \inst{3} \and Michał Burdukiewicz \inst{1}}
 
   \begin{block}{Introduction}
 
-    Amyloids are proteins that tends to aggregate. Their aggregates are causes of neurodegenerative disorders. The in silico identification of amyloids is challenging because their amino acid composition can be extremely variable. Recently, we were able to identify motifs occurring in amyloid sequences and create a machine learning tool, AmyloGram%~\cite{AmyloGram}
-    , which has outperformed other predictors of amyloids. AmyloGram focuses on identifying amino acid motifs responsible for aggregation, thus providing researches with insights about structural sources of amyloidogenesis.
+ Amyloids are self-aggregating proteins associated with neurodegenerative disorders. The \textit{in silico} identification of amyloid proteins is challenging because their amino acid composition can be extremely variable. Recently, we were able to identify motifs occurring in amyloid sequences and create a machine learning tool, AmyloGram~\cite{AmyloGram}, which has outperformed other predictors of amyloids. AmyloGram focuses on identifying amino acid motifs responsible for aggregation, thus providing researches with insights about structural sources of amyloidogenesis.
 
   \end{block}
   
   \begin{block}{AmyloGram workflow}
   
-    AmyloGram 2.0 is an improved version of the AmyloGram. Its principle of operation is very similar - a novelty is the use of hyperparameter tuning.
+    AmyloGram 2.0 is an improved version of the AmyloGram. The improvement in the 2.0 version is the usege of Bayesian hyperparameter tuning.
   
     \begin{figure}
       \includegraphics[width=0.95\textwidth]{figures/ngram_scheme_poster.eps}
@@ -72,8 +71,8 @@ Małgorzata Kotulska \inst{3} \and Michał Burdukiewicz \inst{1}}
   \end{block}
 
   \begin{block}{Model-based optimization}
-    Model-based optimization method is one of possible techniques of discovering optimal hyperparameters for a model in machine learning. Here we treat model as a function from space of hyperparameters into space of possible model performance values. Computing model performance in numerous points of hyperparameters space is too expensive, so we are trying to estimate the model performance function using so-called surrogate model. It seeks for regions of space where optimal results are more probable to occur basing on previous computations. \\
-    After initialising surrogate model $\hat{f}$, the following steps are repeated until some of stoping criterions are met:
+    The model-based optimization method is one of the possible techniques of discovering optimal hyperparameters for a model in machine learning. Here we treat the model as a function from space of hyperparameters into space of possible model performance values. Computing model performance in numerous points of hyperparameters space is too expensive, so we are trying to estimate the model performance function using so-called surrogate model. It seeks for regions of space where optimal results are more probable to occur based on previous computations. \\
+    After initializing surrogate model $\hat{f}$, the following steps are repeated until some of stopping criterions are met:
     \begin{enumerate}
       \item A set of points $\mathbf{x^{(i)}}$ in the hyperparameters space is proosed basing on values of $\hat{f}$.
       \item Value of performance of destination model $f$ is calculated in proposed points $\mathbf{x^{(i)}}$ (model is fit with given set of hyperparameters).
@@ -150,7 +149,7 @@ ggplot(data = points, aes(x = x, y = y)) +
 @
       \end{center}
     \end{figure}
-  Grid search method seeks for optimal value of hyperparameter only in equally-spaced points that are defined by user. Random search method relies on randomization of points that are being tested and is empirically better than the previous one. Model-based optimization is the one method that actually decides how to change the parameter basing on the previous results.
+  Grid search method seeks for the optimal value of hyperparameter only in equally-spaced points that are defined by the user. Random search method relies on randomly chosen points in parameter space and is empirically better than the previous one. The model-based optimization seeks for improvement of prediction performance using results of its previous iterations.
 
   \end{block}
 
@@ -194,7 +193,7 @@ results %>%
   \end{block}
 
   \begin{block}{Results and discussion} 
-    Thanks to the usage of MBO, on the pep424 dataset AmyloGram 2.0 reached AUC 0.91. Moreover, the new version of AmyloGram is able to detect aggregation-prone regions in proteins and explain which amino acid motifs are contributing to the amyloidogenicity. We cross-validate motifs and protein regions detected by our tool with experimental data. AmyloGram is available primarily as the web server (http://www.smorfland.uni.wroc.pl/shiny/AmyloGram/) but can be also accessed as standalone software and the R package.
+Thanks to the usage of MBO, on the pep424 dataset AmyloGram 2.0 reached AUC 0.91. Moreover, the new version of AmyloGram can to detect aggregation-prone regions in proteins and explain which amino acid motifs are contributing to the amyloidogenicity. We cross-validate motifs and protein regions detected by our tool with experimental data. AmyloGram is available primarily as the web server (http://www.smorfland.uni.wroc.pl/shiny/AmyloGram/) but can be also accessed as standalone software and the R package.
   \end{block}
   \vfill
   

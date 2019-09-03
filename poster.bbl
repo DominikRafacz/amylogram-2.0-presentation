@@ -1,0 +1,16 @@
+\begin{thebibliography}{1}
+
+\bibitem{AmyloGram}
+Micha\l{} Burdukiewicz, Piotr Sobczyk, Stefan R\"odiger, Anna {Duda-Madej},
+  Pawe\l{} Mackiewicz, and Ma\l{}gorzata Kotulska.
+\newblock Amyloidogenic motifs revealed by n-gram analysis.
+\newblock {\em Scientific Reports}, 7(1):12961, October 2017.
+
+\bibitem{mlrMBO}
+Bernd Bischl, Jakob Richter, Jakob Bossek, Daniel Horn, Janek Thomas, and
+  Michel Lang.
+\newblock {{mlrMBO}}: {{A Modular Framework}} for {{Model}}-{{Based
+  Optimization}} of {{Expensive Black}}-{{Box Functions}}.
+\newblock March 2017.
+
+\end{thebibliography}

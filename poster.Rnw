@@ -35,11 +35,12 @@
 
 \title{AmyloGram 2.0: MBO in the prediction of amyloid proteins}
 
-\author{Dominik Rafacz \inst{1} \and Stefan Rödiger \inst{2} \and
+\author{Dominik Rafacz* \inst{1} \and Stefan Rödiger \inst{2} \and
 Małgorzata Kotulska \inst{3} \and Michał Burdukiewicz \inst{1}}
 
-\institute[shortinst]{\inst{1} Some Institute \samelineand \inst{2} Another Institute
-\samelineand \inst{3} And One More}
+\institute[shortinst]{\inst{1} Warsaw University of Technology \samelineand \inst{2} Brandenburg Technical University Cottbus-Senftenberg \samelineand \inst{3} Wrocław University of Science and Technology \and
+*dominikrafacz@gmail.com $\diamondsuit$ DominikRafacz@github.com
+}
 
 % ====================
 % Body
@@ -54,58 +55,37 @@ Małgorzata Kotulska \inst{3} \and Michał Burdukiewicz \inst{1}}
 
 \begin{column}{\colwidth}
 
-  \begin{block}{A block title}
+  \begin{block}{Introduction}
 
-    Some block contents, followed by a diagram, followed by a dummy paragraph.
-
-
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ultricies
-    eget libero ac ullamcorper. Integer et euismod ante. Aenean vestibulum
-    lobortis augue, ut lobortis turpis rhoncus sed. Proin feugiat nibh a
-    lacinia dignissim. Proin scelerisque, risus eget tempor fermentum, ex
-    turpis condimentum urna, quis malesuada sapien arcu eu purus.
+    Amyloids are proteins that tends to aggregate. Their aggregates are causes of neurodegenerative disorders. The in silico identification of amyloids is challenging because their amino acid composition can be extremely variable. Recently, we were able to identify motifs occurring in amyloid sequences and create a machine learning tool, AmyloGram%~\cite{AmyloGram}
+    , which has outperformed other predictors of amyloids. AmyloGram focuses on identifying amino acid motifs responsible for aggregation, thus providing researches with insights about structural sources of amyloidogenesis.
 
   \end{block}
-
-  \begin{block}{A block containing a list}
-
-    Nam vulputate nunc felis, non condimentum lacus porta ultrices. Nullam sed
-    sagittis metus. Etiam consectetur gravida urna quis suscipit.
-
-    \begin{itemize}
-      \item \textbf{Mauris tempor} risus nulla, sed ornare
-      \item \textbf{Libero tincidunt} a duis congue vitae
-      \item \textbf{Dui ac pretium} morbi justo neque, ullamcorper
-    \end{itemize}
-
-    Eget augue porta, bibendum venenatis tortor.
-
+  
+  \begin{block}{AmyloGram workflow}
+  
+    AmyloGram 2.0 is an improved version of the AmyloGram. Its principle of operation is very similar - a novelty is the use of hyperparameter tuning.
+  
+    \begin{figure}
+      \includegraphics[width=0.95\textwidth]{figures/ngram_scheme_poster.eps}
+    \end{figure}
   \end{block}
 
-  \begin{alertblock}{A highlighted block}
-
-    This block catches your eye, so \textbf{important stuff} should probably go
-    here.
-
-    Curabitur eu libero vehicula, cursus est fringilla, luctus est. Morbi
-    consectetur mauris quam, at finibus elit auctor ac. Aliquam erat volutpat.
-    Aenean at nisl ut ex ullamcorper eleifend et eu augue. Aenean quis velit
-    tristique odio convallis ultrices a ac odio.
-
-    \begin{itemize}
-      \item \textbf{Fusce dapibus tellus} vel tellus semper finibus. In
-        consequat, nibh sed mattis luctus, augue diam fermentum lectus.
-      \item \textbf{In euismod erat metus} non ex. Vestibulum luctus augue in
-        mi condimentum, at sollicitudin lorem viverra.
-      \item \textbf{Suspendisse vulputate} mauris vel placerat consectetur.
-        Mauris semper, purus ac hendrerit molestie, elit mi dignissim odio, in
-        suscipit felis sapien vel ex.
-    \end{itemize}
-
-    Aenean tincidunt risus eros, at gravida lorem sagittis vel. Vestibulum ante
-    ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae.
-
-  \end{alertblock}
+  \begin{block}{Model-based optimization}
+    Model-based optimization method is one of possible techniques of discovering optimal hyperparameters for a model in machine learning. Here we treat model as a function from space of hyperparameters into space of possible model performance values. Computing model performance in numerous points of hyperparameters space is too expensive, so we are trying to estimate the model performance function using so-called surrogate model. It seeks for regions of space where optimal results are more probable to occur basing on previous computations. \\
+    After initialising surrogate model $\hat{f}$, the following steps are repeated until some of stoping criterions are met:
+    \begin{enumerate}
+      \item A set of points $\mathbf{x^{(i)}}$ in the hyperparameters space is proosed basing on values of $\hat{f}$.
+      \item Value of performance of destination model $f$ is calculated in proposed points $\mathbf{x^{(i)}}$ (model is fit with given set of hyperparameters).
+      \item Points $\mathbf{x^{(i)}}$ with corresponding values $\mathbf{y^{(i)}}$ of model $f$ are used to fit surrogate model $\hat{f}$
+    \end{enumerate}
+    After reaching certain stoping criterion, the best point $\mathbf{x^{(i)}}$ is returned. \\
+    MBO framework used by us is \texttt{mlrMBO}~%\citep{mlrMBO}.
+    \begin{figure}
+      \includegraphics[width=0.95\textwidth]{figures/mbo.eps}
+    \end{figure}
+    
+  \end{block}
 
 \end{column}
 
@@ -113,77 +93,122 @@ Małgorzata Kotulska \inst{3} \and Michał Burdukiewicz \inst{1}}
 
 \begin{column}{\colwidth}
 
-  \begin{block}{A block containing an enumerated list}
+  \begin{block}{Comparison of methods of hyperparameters tuning}
+    \begin{figure}
+      \begin{center}
+<<tunecomp,warning=FALSE,message=FALSE,echo=FALSE,include=TRUE,results=hide,fig=TRUE, width=7>>=
+library(ggplot2)
+library(mlrMBO)
+library(mlr)
+library(randomsearch)
+library(paramtest)
+library(gridExtra)
 
-    Vivamus congue volutpat elit non semper. Praesent molestie nec erat ac
-    interdum. In quis suscipit erat. \textbf{Phasellus mauris felis, molestie
-    ac pharetra quis}, tempus nec ante. Donec finibus ante vel purus mollis
-    fermentum. Sed felis mi, pharetra eget nibh a, feugiat eleifend dolor. Nam
-    mollis condimentum purus quis sodales. Nullam eu felis eu nulla eleifend
-    bibendum nec eu lorem. Vivamus felis velit, volutpat ut facilisis ac,
-    commodo in metus.
+set.seed(1590)
+ex_fun <- makeSingleObjectiveFunction(
+  name = "Sample Function",
+  fn = function(x) sin(x)*x^2,
+  par.set = makeNumericParamSet("x", len = 1L, lower = -3.8L, upper = 2L),
+  global.opt.params = list(x = 0)
+)
+ctrl <- makeMBOControl(propose.points = 1)
+ctrl <- setMBOControlTermination(ctrl, iters = 6L)
+ctrl <- setMBOControlInfill(ctrl, crit = makeMBOInfillCritEI(),
+                           opt = "focussearch", opt.focussearch.points = 500L)
+run <- exampleRun(ex_fun, control = ctrl)
 
-    \begin{enumerate}
-      \item \textbf{Morbi mauris purus}, egestas at vehicula et, convallis
-        accumsan orci. Orci varius natoque penatibus et magnis dis parturient
-        montes, nascetur ridiculus mus.
-      \item \textbf{Cras vehicula blandit urna ut maximus}. Aliquam blandit nec
-        massa ac sollicitudin. Curabitur cursus, metus nec imperdiet bibendum,
-        velit lectus faucibus dolor, quis gravida metus mauris gravida turpis.
-      \item \textbf{Vestibulum et massa diam}. Phasellus fermentum augue non
-        nulla accumsan, non rhoncus lectus condimentum.
-    \end{enumerate}
+mbo_df <- as.data.frame(run$mbo.res$opt.path)
+mbo_optim <- data.frame(x = run$mbo.res$x, y = run$mbo.res$y, method = "MBO")
 
-  \end{block}
+runRandomSearch <- randomsearch(ex_fun, max.evals = 10L)
+random_df <- as.data.frame(runRandomSearch)
+random_optim <- getOptPathEl(runRandomSearch, index = getOptPathBestIndex(runRandomSearch))
+random_optim <- data.frame(x = random_optim$x$x, y = random_optim$y, method = "random search")
 
-  \begin{block}{Fusce aliquam magna velit}
+ex_fun_it <- function(iter, x) return(sin(x)*x^2);
+runGridSearch <- grid_search(ex_fun_it, params = list(x = seq(-3.8,2)))
+grid_df <- data.frame(x = runGridSearch$tests$x, y = unlist(runGridSearch$results))
+grid_optim <- data.frame(x = runGridSearch$tests$x[which.min(unlist(runGridSearch$results))],
+                         y = min(unlist(runGridSearch$results)), method = "grid search")
 
-    Et rutrum ex euismod vel. Pellentesque ultricies, velit in fermentum
-    vestibulum, lectus nisi pretium nibh, sit amet aliquam lectus augue vel
-    velit. Suspendisse rhoncus massa porttitor augue feugiat molestie. Sed
-    molestie ut orci nec malesuada. Sed ultricies feugiat est fringilla
-    posuere.
-
-  \end{block}
-
-  \begin{block}{Nam cursus consequat egestas}
-
-    Nulla eget sem quam. Ut aliquam volutpat nisi vestibulum convallis. Nunc a
-    lectus et eros facilisis hendrerit eu non urna. Interdum et malesuada fames
-    ac ante \textit{ipsum primis} in faucibus. Etiam sit amet velit eget sem
-    euismod tristique. Praesent enim erat, porta vel mattis sed, pharetra sed
-    ipsum. Morbi commodo condimentum massa, \textit{tempus venenatis} massa
-    hendrerit quis. Maecenas sed porta est. Praesent mollis interdum lectus,
-    sit amet sollicitudin risus tincidunt non.
-
-    Etiam sit amet tempus lorem, aliquet condimentum velit. Donec et nibh
-    consequat, sagittis ex eget, dictum orci. Etiam quis semper ante. Ut eu
-    mauris purus. Proin nec consectetur ligula. Mauris pretium molestie
-    ullamcorper. Integer nisi neque, aliquet et odio non, sagittis porta justo.
-
-    \begin{itemize}
-      \item \textbf{Sed consequat} id ante vel efficitur. Praesent congue massa
-        sed est scelerisque, elementum mollis augue iaculis.
-        \begin{itemize}
-          \item In sed est finibus, vulputate
-            nunc gravida, pulvinar lorem. In maximus nunc dolor, sed auctor eros
-            porttitor quis.
-          \item Fusce ornare dignissim nisi. Nam sit amet risus vel lacus
-            tempor tincidunt eu a arcu.
-          \item Donec rhoncus vestibulum erat, quis aliquam leo
-            gravida egestas.
-        \end{itemize}
-      \item \textbf{Sed luctus, elit sit amet} dictum maximus, diam dolor
-        faucibus purus, sed lobortis justo erat id turpis.
-      \item \textbf{Pellentesque facilisis dolor in leo} bibendum congue.
-        Maecenas congue finibus justo, vitae eleifend urna facilisis at.
-    \end{itemize}
+points <- rbind(cbind(grid_df[, c("x", "y")], method = "grid search"),
+                cbind(random_df[, c("x", "y")], method = "random search"),
+                cbind(mbo_df[, c("x", "y")], method = "MBO"))
+optims <- rbind(grid_optim, random_optim, mbo_optim)
+ggplot(data = points, aes(x = x, y = y)) +
+  geom_line(data = run$evals) +
+  geom_point() +
+  geom_point(data = optims, color = "#d72207") +
+  geom_text(data = optims, label = round(optims$y, 2), color = "#d72207", 
+            fontface = "bold", vjust = -1) +
+  facet_wrap(~method, nrow = 3) +
+  theme_bw() +
+  xlab("parameter value") +
+  ylab("function value") +
+  theme(strip.background = element_rect(fill = "#d1e8fc"),
+        strip.text = element_text(face = "bold"))
+@
+      \end{center}
+    \end{figure}
+  Grid search method seeks for optimal value of hyperparameter only in equally-spaced points that are defined by user. Random search method relies on randomization of points that are being tested and is empirically better than the previous one. Model-based optimization is the one method that actually decides how to change the parameter basing on the previous results.
 
   \end{block}
 
+  \begin{block}{AmyloGram 2.0 performance}
+    \begin{figure}
+      \begin{center}
+<<res,warning=FALSE,message=FALSE,echo=FALSE,include=TRUE,results =hide, fig=TRUE>>=
+results <- readr::read_csv("results/all_models_scores.csv")
+
+library(tidyverse)
+results %>%
+  select(-pos, -nice_name, -X1, -MCC) %>%
+  filter(classifier %in% c("full_alphabet", "best_alphabet", 
+                           "class14596_10", "raw_aa_10",
+                           "PASTA2", "appnn", "FoldAmyloid")) %>%
+  mutate(classifier = fct_reorder(fct_recode(as.factor(classifier), 
+                              `AmyloGram 2.0 full\n alphabet` = "full_alphabet",
+                              `AmyloGram 2.0 best\n alphabet` = "best_alphabet",
+                              `AmyloGram full\n alphabet` = "raw_aa_10",
+                              `AmyloGram best\n alphabet` = "class14596_10"),
+                              1:7)) %>%
+  gather(colname, value, -classifier) %>%
+  group_by(colname) %>%
+  mutate(maxcol = max(value)) %>%
+  ungroup() %>%
+  ggplot(aes(x = colname, y = classifier, fill = value,
+             colour = as.factor(ifelse(value == maxcol, 1, 2)),
+             fontface = as.factor(ifelse(value == maxcol, "bold", "plain")))) +
+  geom_bin2d(stat = "identity", color = "#000000") +
+  geom_text(aes(label = format(value, digits = 4))) +
+  scale_color_manual(values = c("#d72207", "#000000"), guide = FALSE) +
+  scale_fill_distiller(palette = "YlOrBr") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlab("measure") +
+  ylab("classifier") +
+  ggtitle("Scores of classifiers")
+@
+      \end{center}
+    \end{figure}
+  \end{block}
+
+  \begin{block}{Results and discussion} 
+    Thanks to the usage of MBO, on the pep424 dataset AmyloGram 2.0 reached AUC 0.91. Moreover, the new version of AmyloGram is able to detect aggregation-prone regions in proteins and explain which amino acid motifs are contributing to the amyloidogenicity. We cross-validate motifs and protein regions detected by our tool with experimental data. AmyloGram is available primarily as the web server (http://www.smorfland.uni.wroc.pl/shiny/AmyloGram/) but can be also accessed as standalone software and the R package.
+  \end{block}
+  \vfill
+  
+  \begin{block}{Acknowledgements}
+  \end{block}
+  \vfill
+
+  \begin{block}{Bibliography}
+    \tiny{
+      \bibliography{references}
+    }
+  \end{block}
+  \vfill
 \end{column}
-
-\separatorcolumn
 
 \separatorcolumn
 \end{columns}

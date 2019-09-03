@@ -115,30 +115,40 @@ grid.arrange(g3, g2, g1, ncol = 1)
 \end{frame} 
 
 \begin{frame}{Results}
-<<res,warning=FALSE,message=FALSE,echo=FALSE,include=TRUE,fig.height=4.5,results = "hide">>=
+<<res,warning=FALSE,message=FALSE,echo=FALSE,include=TRUE,fig.height=3.5,results = "hide">>=
 results <- readr::read_csv("results/all_models_scores.csv")
 
 library(tidyverse)
 results %>%
-  select(-pos, -nice_name, -X1) %>%
+  select(-pos, -nice_name, -X1, -MCC) %>%
   filter(classifier %in% c("full_alphabet", "best_alphabet", 
                            "class14596_10", "raw_aa_10",
                            "PASTA2", "appnn", "FoldAmyloid")) %>%
   mutate(classifier = fct_reorder(fct_recode(as.factor(classifier), 
-                              `AmyloGram 2.0 full` = "full_alphabet",
-                              `AmyloGram 2.0 best` = "best_alphabet",
-                              `AmyloGram full` = "raw_aa_10",
-                              `AmyloGram best` = "class14596_10"),
+                              `AmyloGram 2.0 full\n alphabet` = "full_alphabet",
+                              `AmyloGram 2.0 best\n alphabet` = "best_alphabet",
+                              `AmyloGram full\n alphabet` = "raw_aa_10",
+                              `AmyloGram best\n alphabet` = "class14596_10"),
                               1:7)) %>%
   gather(colname, value, -classifier) %>%
-  ggplot(aes(x = colname, y = classifier, fill = value)) +
+  group_by(colname) %>%
+  mutate(maxcol = max(value)) %>%
+  ungroup() %>%
+  ggplot(aes(x = colname, y = classifier, fill = value,
+             colour = as.factor(ifelse(value == maxcol, 1, 2)))) +
   geom_bin2d(stat = "identity", color = "black") +
-  geom_text(aes(label = format(value, digits = 3))) +
+  geom_text(aes(label = format(value, digits = 4))) +
+  scale_color_manual(values = c("red", "black"), guide = FALSE) +
+  scale_fill_distiller(palette = "YlOrBr") +
   theme_minimal() +
   xlab("measure") +
   ylab("classifier") +
   ggtitle("Scores of classifiers")
 @
+Features used in the model with full alphabet: \textbf{33620} \\
+Features used in the model with best alphabet: \textbf{1014}
+
+
 \end{frame} 
 
 \begin{frame}{Acknowledgements}

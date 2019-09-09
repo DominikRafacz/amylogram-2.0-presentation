@@ -13,6 +13,7 @@
 \usetheme{gemini}
 \usecolortheme{gemini}
 \usepackage{graphicx}
+\usepackage{wrapfig}
 \usepackage{booktabs}
 \usepackage{tikz}
 
@@ -76,7 +77,7 @@ Małgorzata Kotulska \inst{3} \and Michał Burdukiewicz \inst{1}}
     \begin{enumerate}
       \item A set of points $\mathbf{x^{(i)}}$ in the hyperparameters space is proosed basing on values of $\hat{f}$.
       \item Value of performance of destination model $f$ is calculated in proposed points $\mathbf{x^{(i)}}$ (model is fit with given set of hyperparameters).
-      \item Points $\mathbf{x^{(i)}}$ with corresponding values $\mathbf{y^{(i)}}$ of model $f$ are used to fit surrogate model $\hat{f}$
+      \item Points $\mathbf{x^{(i)}}$ with corresponding values $\mathbf{y^{(i)}}$ of model $f$ are used to fit surrogate model $\hat{f}$.
     \end{enumerate}
     After reaching certain stoping criterion, the best point $\mathbf{x^{(i)}}$ is returned. \\
     MBO framework used by us is \texttt{mlrMBO}~\cite{mlrMBO}.
@@ -192,8 +193,14 @@ results %>%
     \end{figure}
   \end{block}
 
-  \begin{block}{Results and discussion} 
-Thanks to the usage of MBO, on the pep424 dataset AmyloGram 2.0 reached AUC 0.91. Moreover, the new version of AmyloGram can detect aggregation-prone regions in proteins and explain which amino acid motifs are contributing to the amyloidogenicity. We cross-validate motifs and protein regions detected by our tool with experimental data. AmyloGram is available primarily as the web server (http://www.smorfland.uni.wroc.pl/shiny/AmyloGram/) but can be also accessed as standalone software and the R package.
+  \begin{block}{Results and discussion}
+    \begin{wrapfigure}{r}{0.22\textwidth}
+      \includegraphics[width=0.20\textwidth]{figures/qrcode.eps}
+    \end{wrapfigure}
+
+Thanks to the usage of MBO, on the pep424 dataset AmyloGram 2.0 reached AUC 0.91. Moreover, the new version of AmyloGram can detect aggregation-prone regions in proteins and explain which amino acid motifs are contributing to the amyloidogenicity. We cross-validate motifs and protein regions detected by our tool with experimental data. 
+
+AmyloGram is available primarily as the web server (http://www.smorfland.uni.wroc.pl/shiny/AmyloGram/) but can be also accessed as standalone software and the R package.
   \end{block}
   \vfill
   

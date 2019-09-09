@@ -64,52 +64,44 @@ library(randomsearch)
 library(paramtest)
 library(gridExtra)
 
-present_theme <- theme_bw(base_size = 12) +
-  theme(legend.position = "bottom", 
-        plot.background = element_rect(fill = NA, color = NA), 
-        legend.background= element_rect(fill = NA))
-
 set.seed(1590)
-fn2 = makeSingleObjectiveFunction(
+ex_fun <- makeSingleObjectiveFunction(
   name = "Sample Function",
   fn = function(x) sin(x)*x^2,
   par.set = makeNumericParamSet("x", len = 1L, lower = -3.8L, upper = 2L),
   global.opt.params = list(x = 0)
 )
-ctrl = makeMBOControl(propose.points = 1)
-ctrl = setMBOControlTermination(ctrl, iters = 6L)
-ctrl = setMBOControlInfill(ctrl, crit = makeMBOInfillCritEI(),
+ctrl <- makeMBOControl(propose.points = 1)
+ctrl <- setMBOControlTermination(ctrl, iters = 6L)
+ctrl <- setMBOControlInfill(ctrl, crit = makeMBOInfillCritEI(),
                            opt = "focussearch", opt.focussearch.points = 500L)
-run <- exampleRun(fn2, control = ctrl)
+run <- exampleRun(ex_fun, control = ctrl)
 
-df <- as.data.frame(run$mbo.res$opt.path) 
-g1 <- ggplot(data=run$evals, aes(x=x,y=y)) + geom_line() + geom_point(data=data.frame(x=df$x,y=df$y)) + 
-  geom_point(data=data.frame(x=run$mbo.res$x,y=run$mbo.res$y), color="red") +
-  geom_text(data=data.frame(x=run$mbo.res$x,y=run$mbo.res$y), label = round(run$mbo.res$y, 2), color="red", vjust = -1) +
-  ggtitle("MBO") +
-  present_theme
+mbo_df <- as.data.frame(run$mbo.res$opt.path) 
+mbo_optim <- data.frame(x = run$mbo.res$x, y = run$mbo.res$y, method = "MBO")
 
-runRandomSearch <- randomsearch(fn2, max.evals = 10L)
-df2 <- as.data.frame(runRandomSearch)
-opt2 <- getOptPathEl(runRandomSearch, index = getOptPathBestIndex(runRandomSearch))
-g2 <- ggplot(data=run$evals, aes(x=x,y=y)) + geom_line() + geom_point(data=data.frame(x=df2$x,y=df2$y)) + 
-  geom_point(data=data.frame(x=opt2$x,y=opt2$y), color="red") +
-  geom_text(data=data.frame(x=opt2$x,y=opt2$y), label = round(opt2$y, 2), color="red", vjust = -1) +
-  ggtitle("Random search") +
-  present_theme
+runRandomSearch <- randomsearch(ex_fun, max.evals = 10L)
+random_df <- as.data.frame(runRandomSearch)
+random_optim <- getOptPathEl(runRandomSearch, index = getOptPathBestIndex(runRandomSearch))
+random_optim <- data.frame(x = random_optim$x$x, y = random_optim$y, method = "random search")
 
+ex_fun_it <- function(iter, x) return(sin(x)*x^2);
+runGridSearch <- grid_search(ex_fun_it, params = list(x = seq(-3.8,2)))
+grid_df <- data.frame(x = runGridSearch$tests$x, y = unlist(runGridSearch$results))
+grid_optim <- data.frame(x = runGridSearch$tests$x[which.min(unlist(runGridSearch$results))],
+                         y = min(unlist(runGridSearch$results)), method = "grid search")
 
-fn2.b <- function(iter, x) return(sin(x)*x^2);
-runGridSearch <- grid_search(fn2.b, params = list(x=seq(-3.8,2)))
-df3 <- data.frame(x=runGridSearch$tests$x, y=unlist(runGridSearch$results))
-opt3 <- data.frame(x=runGridSearch$tests$x[which.min(unlist(runGridSearch$results))],y=min(unlist(runGridSearch$results)))
-g3 <- ggplot(data=run$evals, aes(x=x,y=y)) + geom_line() + geom_point(data=data.frame(x=df3$x,y=df3$y)) + 
-  geom_point(data=data.frame(x=opt3$x,y=opt3$y), color="red") +
-  geom_text(data=data.frame(x=opt3$x,y=opt3$y), label = round(opt3$y, 2), color="red", vjust = -1) +
-  ggtitle("Grid search") +
-  present_theme
-
-grid.arrange(g3, g2, g1, ncol = 1)
+points <- rbind(cbind(grid_df[, c("x", "y")], method = "grid search"),
+                cbind(random_df[, c("x", "y")], method = "random search"),
+                cbind(mbo_df[, c("x", "y")], method = "MBO")) 
+optims <- rbind(grid_optim, random_optim, mbo_optim)
+ggplot(data = points, aes(x = x, y = y)) +
+  geom_line(data = run$evals) +
+  geom_point() +
+  geom_point(data = optims, color = "red") +
+  geom_text(data = optims, label = round(optims$y, 2), color = "red", vjust = -1) +
+  facet_wrap(~method, nrow = 3) +
+  theme_bw()
 @
 
 \end{frame} 
@@ -145,17 +137,22 @@ results %>%
   ylab("classifier") +
   ggtitle("Scores of classifiers")
 @
-Features used in the model with full alphabet: \textbf{33620} \\
-Features used in the model with best alphabet: \textbf{1014}
-
-
+Features used in the model in original model: \textbf{262} () \\
+Features used in the model with full alphabet: \textbf{33620} (100\%) \\
+Features used in the model with best alphabet: \textbf{1014} \\
 \end{frame} 
 
-\begin{frame}{Acknowledgements}
-
-\end{frame} 
-
-\begin{frame}{References}
-
+\begin{frame}{Acknowledgements \& references}
+  Special thanks to:
+  \begin{itemize}
+    \item Students' Union of Warsaw University of Technology
+    \item Michał Burdukiewicz (Warsaw University of Technology)
+  \end{itemize}
+  
+  \vspace{40pt}
+  Burdukiewicz, M., Sobczyk, P., Rödiger, S., Duda-Madej, A., Mackiewicz, P., and Kotulska, M. (2017). Amyloidogenic motifs revealed by n-gram analysis. Scientific Reports 7, 12961
+  
+  Bischl, B., Richter, J., Bossek, J., Horn, D., Thomas, J. and Lang, M. (2017). mlrMBO: A Modular Framework for Model-Based Optimization of Expensive Black-Box Functions.
+  \bibliographystyle{unsrt}
 \end{frame} 
 \end{document}

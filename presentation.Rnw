@@ -137,13 +137,9 @@ results %>%
   ylab("classifier") +
   ggtitle("Scores of classifiers")
 @
-Features used in the model in original model: \textbf{262} \\
+Features used in the model in the original AmyloGram: \textbf{262} \\
 Features used in the model with full alphabet: \textbf{33620} \\
 Features used in the model with best alphabet: \textbf{1014} \\
-\end{frame} 
-
-\begin{frame}{Results}
-MBO shows an improvement compared to the grid optimization, but feature engineering (development of new alphabets and n-grams) requires further adjustment of the tuning method.
 \end{frame} 
 
 \begin{frame}{Acknowledgements \& references}
@@ -153,9 +149,9 @@ MBO shows an improvement compared to the grid optimization, but feature engineer
     \item Michał Burdukiewicz (Warsaw University of Technology).
   \end{itemize}
   
-  \vspace{40pt}
+  \vspace{30pt}
   Burdukiewicz, M., Sobczyk, P., Rödiger, S., Duda-Madej, A., Mackiewicz, P., and Kotulska, M. (2017). Amyloidogenic motifs revealed by n-gram analysis. Scientific Reports 7, 12961
-  
+  \vspace{10pt}
   Bischl, B., Richter, J., Bossek, J., Horn, D., Thomas, J. and Lang, M. (2017). mlrMBO: A Modular Framework for Model-Based Optimization of Expensive Black-Box Functions.
   \bibliographystyle{unsrt}
 \end{frame} 

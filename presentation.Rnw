@@ -137,16 +137,20 @@ results %>%
   ylab("classifier") +
   ggtitle("Scores of classifiers")
 @
-Features used in the model in original model: \textbf{262} () \\
-Features used in the model with full alphabet: \textbf{33620} (100\%) \\
+Features used in the model in original model: \textbf{262} \\
+Features used in the model with full alphabet: \textbf{33620} \\
 Features used in the model with best alphabet: \textbf{1014} \\
+\end{frame} 
+
+\begin{frame}{Results}
+MBO shows an improvement compared to the grid optimization, but feature engineering (development of new alphabets and n-grams) requires further adjustment of the tuning method.
 \end{frame} 
 
 \begin{frame}{Acknowledgements \& references}
   Special thanks to:
   \begin{itemize}
-    \item Students' Union of Warsaw University of Technology
-    \item Michał Burdukiewicz (Warsaw University of Technology)
+    \item Students' Union of Warsaw University of Technology,
+    \item Michał Burdukiewicz (Warsaw University of Technology).
   \end{itemize}
   
   \vspace{40pt}

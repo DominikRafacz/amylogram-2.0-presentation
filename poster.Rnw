@@ -200,7 +200,7 @@ results %>%
 
 On the pep424 dataset AmyloGram 2.0 reached AUC 0.91. Moreover, the new version of AmyloGram can detect aggregation-prone regions in proteins and explain which amino acid motifs are contributing to the amyloidogenicity. We cross-validate motifs and protein regions detected by our tool with experimental data. MBO method allowed us to reach better results in the prediction of amyloids, but feature engineering (development of new alphabets and n-grams) requires further adjustment of the tuning method.
 
-AmyloGram is available primarily as the web server (http://www.smorfland.uni.wroc.pl/shiny/AmyloGram/) but can be also accessed as standalone software and the R package.
+AmyloGram is available primarily as the web server (under the following link: http://www.smorfland.uni.wroc.pl/shiny/AmyloGram/) but can be also accessed as standalone software and the R package.
   \end{block}
   \vfill
   
